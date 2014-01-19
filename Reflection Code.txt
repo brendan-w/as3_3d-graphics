@@ -1,0 +1,59 @@
+/*
+	Was tinkering with vector reflections from a light source to a camera
+*/
+
+		public function getAngle(light:Point3D, polygon:Polygon, camera:CameraOb):Number
+		{
+			var reflect:Point3D = getReflect(light, polygon, camera);
+			var trueV:Point3D = getVector(polygon.getCenter(), camera.position, true);
+			
+			return 180*(Math.acos((reflect.x*trueV.x) + (reflect.y*trueV.y) + (reflect.z*trueV.z)) / Math.PI);
+		}
+		
+		//method for reflecting vectors across the surface normal of a polygon
+		public function getReflect(light:Point3D, polygon:Polygon, camera:CameraOb):Point3D
+		{
+			var v1:Point3D = getVector(polygon.getCenter(), light, true);
+			var normal:Point3D = polygon.getNormal();
+			var dot:Number = (v1.x*normal.x) + (v1.y*normal.y) + (v1.z*normal.z);
+			var proj:Point3D = new Point3D(normal.x * dot * (-2),
+										   normal.y * dot * (-2),
+										   normal.z * dot * (-2));
+			var reflect:Point3D = new Point3D(v1.x - proj.x,
+											  v1.y - proj.y,
+											  v1.z - proj.y);
+			reflect.normalizeV();
+			return reflect;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		public function drawReflect(polygon:Polygon):void
+		{
+			if(polygon.points.length >= 1)
+			{
+				//go to the start position of the polygon
+				penUp();
+				moveAbs(project(polygon.getCenter()).x, project(polygon.getCenter()).y);
+				penDown();
+				
+				var v1:Point3D = polygon.material.getReflect(light, polygon, camera);
+				//var v1:Point3D = polygon.material.getVector(polygon.getCenter(), light, true);
+				v1 = new Point3D(v1.x*10,
+								 v1.y*10,
+								 v1.z*10);				
+				//load material properties
+				setStroke(0x000000, 1, 1);
+				var startP:Point3D = polygon.getCenter().duplicate();
+				startP.movePoint(v1);
+			
+				line(polygon.getCenter(), startP);
+				
+				penUp();
+			}
+		}

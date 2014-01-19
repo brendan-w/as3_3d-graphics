@@ -1,0 +1,3 @@
+3D Turtle Graphics
+
+This project uses a 2D turtle graphics system to render 3D objects. A system of classes representing 3D Points, Polygons and Objects was created to facilitate work with these structures. The original 2D Turtle class was extended with functions accepting these 3D Objects. Upon startup, the document class procedurally generates a unique fracture pattern for the glass, and gives it to the turtle for rendering. The system also computes the surface normals of all polygons in order to apply shading mathematics. 
